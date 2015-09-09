@@ -27,6 +27,7 @@ var g$url = {
             location.href = location.origin + location.pathname +'?state=true'+(state=="false"?'#list':'#'+state);
         }else{
             var code = document.cookie.match(/code=([^\b&]*)/);
+            test||test.alert(code);
             if(code){
                 code = code[1];
                 ROLE.code=code;
@@ -45,8 +46,6 @@ var ROLE = {
     openId:'',
     subscribe:0
 };
-
-alert(document.cookie);
 if(!g$url.getParam().state){
     g$url.getWxAuth();
 }else{
