@@ -12,8 +12,6 @@ var g$url = {
             if (arg.length == 1) this.param[arg[0]] = true;
             else this.param[arg[0]] = arg[1];
         }
-        alert("this.param.hash:" + this.param.hash);
-        alert("this.param.state:" + this.param.state);
 
         if(location.hash)this.param.hash = location.hash.substr(1);
         return this.param;
@@ -30,14 +28,17 @@ var g$url = {
         if(state!="true"){
             alert("checkUrl-state-cookie:" + document.cookie);
             document.cookie = "code="+ (this.param.code||null) +"&";
+            alert("cookie:"+document.cookie);
             if(state=="false"){
+                alert("state==false");
                 location.href = location.origin + location.pathname + '?state=true#list'
             }else{
+                alert("state:"+state);
                 location.href = location.origin + location.pathname + '?state=true#' + state;
             }
         }else{
             var code = document.cookie.match(/code=([^\b&]*)/);
-            alert("checkUrl-state-code:" + code);
+            alert("checkUrl-cookieGet-code:" + code);
             if(code){
                 code = code[1];
                 ROLE.code=code;
@@ -58,7 +59,6 @@ var ROLE = {
     subscribe:0
 };
 
-alert("!g$url.getParam().state:"+!g$url.getParam().state);
 if(!g$url.getParam().state){
     g$url.getWxAuth();
 }else{
