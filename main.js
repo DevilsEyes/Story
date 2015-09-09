@@ -382,26 +382,17 @@ var page_sign = {
             success: function (res) {
                 var localId = res.localIds[0];
 
-                layer.open({
-                    type: 1,
-                    title: false,
-                    closeBtn: false,
-                    shadeClose: true,
-                    skin: 'tatoo',
-                    content: "<img src='" + localId + "'>"
+                $('#upload').css({
+                    "background-image": 'url("' + localId + '")',
+                    "background-size": 'cover'
                 });
 
                 wx.uploadImage({
                     localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
                     isShowProgressTips: 1, // 默认为1，显示进度提示
                     success: function (res) {
-                        if (test)test.alert(res);
                         var serverId = res.serverId; // 返回图片的服务器端ID
                         page_sign.img = serverId;
-                        $('#upload').css({
-                            "background-image": 'url("' + localId + '")',
-                            "background-size": 'cover'
-                        })
                     }
                 });
             }
