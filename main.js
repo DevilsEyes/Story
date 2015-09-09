@@ -1,11 +1,11 @@
 var baseUrl = 'http://182.92.161.173:5588/activities/productVote/';
 
-var ROLE = {
-    isAuth: false,
-    code: '',
-    openId: '',
-    subscribe: 0
-};
+//var ROLE = {
+//    isAuth: false,
+//    code: '',
+//    openId: '',
+//    subscribe: 0
+//};
 
 juicer.register('pageCreat', function (i, page, Maxpage) {
     if (page == i) {
@@ -337,6 +337,7 @@ var page_list = {
 var page_story = {
     id: null,
     data: {
+        id:null,
         index: 120,
         name: '呵呵哒',
         vote: 279,
@@ -346,6 +347,8 @@ var page_story = {
         desc: "这是一串长长的文字。里面有\n换行，还有不少 空  格"
     },
     e$vote: function () {
+
+
     },
     init: function () {
         //ex.render('#page_story',page_story.data);
