@@ -59,6 +59,7 @@ var ROLE = {
     subscribe:0
 };
 
+alert(location.href);
 if(!g$url.getParam().state){
     g$url.getWxAuth();
 }else{
