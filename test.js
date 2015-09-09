@@ -1,7 +1,7 @@
 window.test={
     alert:function(obj){
         if(typeof(obj)=='object'){
-            var str='testAlert:\n|';
+            var str='testAlert:\n|\n';
             for (var i in obj) {
 
                 if(typeof obj[i] == 'function'){
