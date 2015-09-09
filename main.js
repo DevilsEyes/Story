@@ -93,7 +93,6 @@ var WX = {
             beforeSend: function () {
             },
             success: function (obj) {
-                //obj = $.parseJSON(obj);
                 console.dir(obj);
                 var appId = obj.data.appId,
                     timestamp = obj.data.timestamp,
@@ -260,7 +259,7 @@ var page_list = {
                 id: page_list.list[index].id
             },
             success: function (obj) {
-                obj = $.parseJSON(obj);
+                
                 if (obj.code == 0) {
                     layer.msg("投票成功!");
                     page_list.list[index].vote++;
@@ -281,7 +280,7 @@ var page_list = {
                 index: (this.data.page - 1) * 6
             },
             success: function (obj) {
-                //obj = $.parseJSON(obj);
+                //
                 console.dir(obj);
                 if (obj.success) {
                     page_list.list = obj.data;
@@ -358,10 +357,10 @@ var page_story = {
         $('.infoBox').hide();
         $('#loading').hide();
 
-        $('#page_story btn:eq(0)').click(this.e$vote);
-        $('#page_story btn:eq(1)').click(function(){location.hash='#sign';});
-        $('#page_story btn:eq(2)').click(function(){location.hash='#list';});
-        $('#page_story btn:eq(3)').click(function(){location.href='http://www.wenshendaka.com';});
+        $('#page_story .btn:eq(0)').click(this.e$vote);
+        $('#page_story .btn:eq(1)').click(function(){location.hash='#sign';});
+        $('#page_story .btn:eq(2)').click(function(){location.hash='#list';});
+        $('#page_story .btn:eq(3)').click(function(){location.href='http://www.wenshendaka.com';});
     }
 };
 
@@ -408,7 +407,7 @@ var page_sign = {
                 phonenum: this.phonenum
             },
             success: function (obj) {
-                obj = $.parseJSON(obj);
+                //
                 if (obj.code == 0) {
 
                 }
@@ -417,15 +416,17 @@ var page_sign = {
     },
     init: function () {
 
-        //ex.render('#page_sign',page_sign.data);
         $('.page').hide();
         $('#page_sign').show();
         footer.tab('sign');
         $('.infoBox').show();
         $('#loading').hide();
 
-        $('#upload').click(this.e$uploadImg);
-        $('#page_sign .btn').click(this.e$uploadProduct);
+        setTimeout(function(){
+            $('#upload').click(page_sign.e$uploadImg);
+            $('#page_sign .btn').click(page_sign.e$uploadProduct);
+        },0);
+
     }
 };
 
