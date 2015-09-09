@@ -1,4 +1,4 @@
-var baseUrl = 'http://182.92.161.173:5588/activities/';
+var baseUrl = 'http://182.92.161.173:5588/activities/productVote/';
 
 juicer.register('pageCreat', function (i, page, Maxpage) {
     if (page == i) {
@@ -50,7 +50,9 @@ window.addEventListener('load', function () {
         signCount: 10,
         voteConut: 20,
         visitCount: 30
-    })
+    });
+
+    WX.init();
 
 }, false);
 
@@ -84,7 +86,8 @@ var WX = {
             beforeSend: function () {
             },
             success: function (obj) {
-                obj = $.parseJSON(obj);
+                //obj = $.parseJSON(obj);
+                console.dir(obj);
                 var appId = obj.data.app_id,
                     timestamp = obj.data.timestamp,
                     nonceStr = obj.data.noncestr,
@@ -259,8 +262,9 @@ var page_list = {
                 index: (this.data.page - 1) * 6
             },
             success: function (obj) {
-                obj = $.parseJSON(obj);
-                if (obj.code == 0) {
+                //obj = $.parseJSON(obj);
+                console.dir(obj)
+                if (obj.success) {
                     page_list.list = obj.data;
                     ex.render('#itemList', page_list.data);
                     ex.render('#pageBox', page_list.data);

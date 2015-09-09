@@ -37,6 +37,7 @@ var g$url = {
                 ROLE.code=code;
                 ROLE.isAuth=true;
                 document.cookie = "code=&";
+                alert(ROLE.code);
             }else{
                 this.getWxAuth();
             }

@@ -1,5 +1,5 @@
 #share{
-    /*display: none;*/
+    display: none;
     position: fixed;
     z-index: 99999;
     top:0;
