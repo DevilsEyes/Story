@@ -2,7 +2,7 @@ window.test=true;
 
 test['alert'] = function(obj){
         if(typeof(obj)=='object'){
-            var str='';
+            var str='testAlert:\n|';
             for (var i in obj) {
 
                 if(typeof obj[i] == 'function'){

@@ -146,7 +146,7 @@ var myWindow = {
             closeBtn: false,
             shadeClose: true,
             skin: 'tatoo',
-            content: '<a href="'+link+'">未关注公众号，没有投票权限。</a>'
+            content: '<a href="' + link + '">未关注公众号，没有投票权限。</a>'
         });
     },
     uploadSuccess: function () {
@@ -259,7 +259,7 @@ var page_list = {
                 id: page_list.list[index].id
             },
             success: function (obj) {
-                
+
                 if (obj.code == 0) {
                     layer.msg("投票成功!");
                     page_list.list[index].vote++;
@@ -345,10 +345,11 @@ var page_story = {
         img: "http://img.meizhanggui.cc/093d5b74cbdc8e759c9ad6565cd5ec9d_W_1500X1029",
         desc: "这是一串长长的文字。里面有\n换行，还有不少 空  格"
     },
-    e$vote:function(){},
+    e$vote: function () {
+    },
     init: function () {
         //ex.render('#page_story',page_story.data);
-        if(this.data.id=='')location.hash="#list";
+        if (this.data.id == '')location.hash = "#list";
 
         $('.page').hide();
         $('#page_story').show();
@@ -358,9 +359,15 @@ var page_story = {
         $('#loading').hide();
 
         $('#page_story .btn:eq(0)').click(this.e$vote);
-        $('#page_story .btn:eq(1)').click(function(){location.hash='#sign';});
-        $('#page_story .btn:eq(2)').click(function(){location.hash='#list';});
-        $('#page_story .btn:eq(3)').click(function(){location.href='http://www.wenshendaka.com';});
+        $('#page_story .btn:eq(1)').click(function () {
+            location.hash = '#sign';
+        });
+        $('#page_story .btn:eq(2)').click(function () {
+            location.hash = '#list';
+        });
+        $('#page_story .btn:eq(3)').click(function () {
+            location.href = 'http://www.wenshendaka.com';
+        });
     }
 };
 
@@ -379,9 +386,17 @@ var page_sign = {
                     localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
                     isShowProgressTips: 1, // 默认为1，显示进度提示
                     success: function (res) {
-                        if(test)test.alert(res);
+                        if (test)test.alert(res);
                         var serverId = res.serverId; // 返回图片的服务器端ID
                         page_sign.img = serverId;
+                        layer.open({
+                            type: 1,
+                            title: false,
+                            closeBtn: false,
+                            shadeClose: true,
+                            skin: 'tatoo',
+                            content: "<img src='" + localId + "'>"
+                        });
                         $('#upload').css({
                             "background-image": 'url("' + localId + '")',
                             "background-size": 'cover'
@@ -424,10 +439,10 @@ var page_sign = {
         $('.infoBox').show();
         $('#loading').hide();
 
-        setTimeout(function(){
+        setTimeout(function () {
             $('#upload').click(page_sign.e$uploadImg);
             $('#page_sign .btn').click(page_sign.e$uploadProduct);
-        },0);
+        }, 0);
 
     }
 };
