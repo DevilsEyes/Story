@@ -19,7 +19,7 @@ var g$url = {
     getWxAuth:function(){
         var REURI = encodeURIComponent(location.origin + location.pathname),
             STATE = this.param.hash||"false";
-        return location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf878426c727d8305&redirect_uri="+REURI+"&response_type=code&scope=snsapi_userinfo&state="+STATE+"#wechat_redirect"
+        return location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf878426c727d8305&redirect_uri="+REURI+"&response_type=code&scope=snsapi_base&state="+STATE+"#wechat_redirect"
     },
     checkUrl:function(){
         var state = this.param.state;
