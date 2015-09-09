@@ -14,13 +14,13 @@ var g$url = {
         }
 
         if(location.hash)this.param.hash = location.hash.substr(1);
+        if(test)test.alert(this.param);
         return this.param;
     },
     getWxAuth:function(){
         var REURI = encodeURIComponent(location.origin + location.pathname),
             STATE = this.param.hash||"false";
-        alert(REURI);
-        return location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf72ed77c92113ec4&redirect_uri=http://m.wenshendaka.com/activities/story/&response_type=code&scope=snsapi_userinfo&state="+STATE+"#wechat_redirect"
+        return location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf72ed77c92113ec4&redirect_uri="+REURI+"&response_type=code&scope=snsapi_userinfo&state="+STATE+"#wechat_redirect"
     },
     checkUrl:function(){
         var state = this.param.state;

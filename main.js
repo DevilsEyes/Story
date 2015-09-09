@@ -248,7 +248,6 @@ var page_list = {
         this.toPage(i)
     },
     e$vote: function (index) {
-        alert(index);
         if (ROLE.subscribe == 0) {
             myWindow.notAttention();
             return;
@@ -260,7 +259,7 @@ var page_list = {
             },
             success: function (obj) {
 
-                if (obj.code == 0) {
+                if (obj.success) {
                     layer.msg("投票成功!");
                     page_list.list[index].vote++;
                     page_list.toPage(page_list.data.page);
@@ -347,8 +346,26 @@ var page_story = {
         desc: "这是一串长长的文字。里面有\n换行，还有不少 空  格"
     },
     e$vote: function () {
+        if (ROLE.subscribe == 0) {
+            myWindow.notAttention();
+            return;
+        }
+        ex.jsonp({
+            url: baseUrl + "vote/?_method=GET",
+            data: {
+                id: page_story.data.id
+            },
+            success: function (obj) {
 
-
+                if (obj.success) {
+                    layer.msg("投票成功!");
+                    page_story.data.vote++;
+                    $('#page_story .vote').text('票数：' + page_story.data.vote);
+                } else {
+                    layer.msg(obj.msg);
+                }
+            }
+        }, this);
     },
     init: function () {
         //ex.render('#page_story',page_story.data);
@@ -420,7 +437,7 @@ var page_sign = {
             },
             success: function (obj) {
                 if(test)test.alert(obj);
-                if (obj.code == 0) {
+                if (obj.success) {
 
                 }
             }
