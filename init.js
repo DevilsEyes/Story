@@ -17,9 +17,10 @@ var g$url = {
         return this.param;
     },
     getWxAuth:function(){
-        var REURI = encodeURIComponent(location.href),
+        var REURI = encodeURIComponent(location.origin + location.pathname),
             STATE = this.param.hash||"false";
-        return location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf72ed77c92113ec4&redirect_uri="+REURI+"&response_type=code&scope=snsapi_base&state="+STATE+"#wechat_redirect"
+        alert(REURI);
+        return location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf72ed77c92113ec4&redirect_uri="+REURI+"&response_type=code&scope=snsapi_userinfo&state="+STATE+"#wechat_redirect"
     },
     checkUrl:function(){
         var state = this.param.state;
