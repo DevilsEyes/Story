@@ -20,7 +20,7 @@ var g$url = {
         var REURI = encodeURIComponent(location.origin + location.pathname),
             STATE = this.param.hash||"false";
         alert(REURI);
-        return location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx57c7040dfd0ba925&redirect_uri=http://m.meizhanggui.cc/wsdk/&response_type=code&scope=snsapi_userinfo&state="+STATE+"#wechat_redirect"
+        return location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf72ed77c92113ec4&redirect_uri=http://m.wenshendaka.com/activities/story/&response_type=code&scope=snsapi_userinfo&state="+STATE+"#wechat_redirect"
     },
     checkUrl:function(){
         var state = this.param.state;
