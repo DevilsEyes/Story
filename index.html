@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <script src="init.js"></script>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script>
+        //是否移动端判断
+        g$isMobile = navigator.userAgent.match(/mobile/i) != null;
+
+        //移动端显示设置
+        if (g$isMobile) {
+            var m = document.createElement("META");
+            m.setAttribute("name", "viewport");
+            m.setAttribute("content", "width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no");
+            document.head.appendChild(m);
+        }
+        document.write('<div id="loading" style="width:100%;height:100%;top:0;background:white;text-align:center;position:fixed;z-index:9999;"><span><img src="imgs/loading.gif" style="margin-top:200px;"/></span></div>');
+    </script>
+    <link href="universe.css" rel="stylesheet"/>
+    <link href="style.css" rel="stylesheet"/>
+    <script src="inlcude/dev.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="main.js"></script>
+</head>
+<body>
+<div id="share"><img src="imgs/s.png"></div>
+
+<header>
+    <img src="imgs/banner.jpg">
+    <img src="imgs/adv.png">
+</header>
+
+<div class="infoBox">
+    <div>
+        已报名<br/>${signCount}
+    </div>
+    <div>
+        投票人次<br/>${voteConut}
+    </div>
+    <div>
+        访问量<br/>${visitCount}
+    </div>
+</div>
+
+<div id="content">
+
+    <div id="page_list" class="page">
+
+        <div class="searchBox">
+            <input type="text" id="searchBar" placeholder="搜索名字或编号" class="f28"/>
+            <span id="searchButtom"></span>
+        </div>
+
+        <div class="tab">
+            <div class="selected">最新参赛</div>
+            <div>投票排行</div>
+        </div>
+        <ul id="itemList"></ul>
+        <ul id="pageBox"></ul>
+    </div>
+    <script id="itemListTemp" type="text/template">
+        {@each list as item,index}
+        <li>
+            <div><p>${item.index}</p></div>
+            $${item.img|imgCreat,null,'pbl'}
+
+            <div>
+                <div class="votebtn">
+                    投票
+                </div>
+                <div>
+                    ${item.name}<br/>${item.vote}票
+                </div>
+
+            </div>
+
+
+        </li>
+        {@/each}
+    </script>
+    <script id="pageBoxTemp" type="text/template">
+        {@if page!==1}
+        <li class="beforePage">&lt;</li>
+        {@/if}
+
+        {@each i in range(page-3,page+3)}
+        $${i|pageCreat,page,Maxpage}
+        {@/each}
+
+        {@if page!==Maxpage}
+        <li class="nextPage">&gt;</li>
+        {@/if}
+    </script>
+
+    <div id="page_story" class="page">
+        <div id="close"></div>
+        <div class="storyBox">
+            <p>${index}&nbsp;&nbsp;${name}</p>
+
+            <p class="vote">票数：${vote}</p>
+
+            <div class="rect">
+                <div>
+                    排名：${rank}
+                    <br/>
+                    距上一名还差${x}票
+                </div>
+            </div>
+            $${img|imgCreat}
+            <div>
+                $${desc|text}
+            </div>
+        </div>
+        <div class="btn hot">我要投票</div>
+        <div class="btn">我也要参加</div>
+        <div class="btn">查看更多</div>
+        <div class="btn">下载纹身大咖</div>
+    </div>
+
+    <div id="page_sign" class="page">
+        <h1>报名处</h1>
+        <input type="text" maxlength="10" placeholder="姓名" class="textinput" id="name">
+        <input type="tel" maxlength="11" placeholder="手机号" class="textinput" id="phonenum">
+
+        <div id="upload"></div>
+
+        <textarea id="desc" placeholder="请输入您的故事，建议不超过140个字"></textarea>
+
+        <div class="btn">确认报名</div>
+    </div>
+</div>
+
+<div class="description">
+    <h1>纹身大咖征集故事大赛说明</h1>
+
+    <h2>概述：</h2>
+
+    <p>征求广大纹身师和纹身爱好者对于自己纹身的故事，故事内容不限，可以是个人情感经历，也可以是决定纹身的过程中的故事。</p>
+
+    <p>本次活动通过参与者转发投票的形式，增加自己的人气数量，获得本次活动奖品。</p>
+    <br>
+
+    <h3>
+        晒出你“纹身”图案，让个性和美更多一点！<br/>更有纹身大咖提供的免费纹身大礼等你来拿！
+    </h3>
+    <br><br>
+
+    <h2>参赛作品要求：</h2>
+
+    <p>1.个性美观，不低俗；</p>
+
+    <p>2.上传自己身上的纹身图案，附上140字以内的简单的故事内容。</p>
+    <br><br>
+
+    <h2>参与方式：</h2>
+
+    <p>1.上传自己身上的纹身图案，附上140字以内的简单的故事内容，以转发的形式求赞，按照投票数量排名获得奖励；</p>
+
+    <p>2.按照参赛作品要求，并按照自己的喜好晒出你自己的纹身或者喜欢的纹身图案；</p>
+
+    <p>3.在朋友圈转发#纹身大咖，晒出你的纹身故事#H5活动页，并上传自己最爱的纹身图片到活动页即成功参与活动。</p>
+
+    <p>4.可以每天转发投票，每人每天可投票一次。</p>
+    <br><br>
+
+    <h2>活动时间：</h2>
+
+    <p>2015年9月9日 至 2015年9月22日</p>
+    <br><br>
+
+    <h2>微信评奖时间：</h2>
+
+    <p>2015年9月22日 至 2015年9月24日（评奖期间投票数不计算）</p>
+    <br><br>
+
+    <h1>奖品与获奖说明</h1>
+
+    <h2>一等奖：</h2>
+
+    <p>&nbsp;“上海纹身艺术节”门票 + 限量T-恤 + 精美小礼品</p>
+
+    <h2>二等奖：</h2>
+
+    <p>&nbsp;“上海纹身艺术节”门票 + 限量T-恤</p>
+
+    <h2>三等奖：</h2>
+
+    <p>&nbsp;“上海纹身艺术节”门票 + 精美小礼品</p>
+
+    <h2>优秀奖：</h2>
+
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;精美小礼品</p>
+
+</div>
+
+<footer>
+    <a href="#story">
+        <span class="icon story"></span><br>故事
+    </a>
+    <a href="#list">
+        <span class="icon list"></span><br>排名
+    </a>
+    <a href="#sign">
+        <span class="icon sign"></span><br>报名
+    </a>
+</footer>
+
+</body>
+</html>
