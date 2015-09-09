@@ -402,10 +402,10 @@ var page_sign = {
         this.nickname = $('#name').val();
         this.phonenum = $('#phonenum').val();
         this.desc = $('#desc').val();
-        if (this.phonenum && this.phonenum.length < 11)return layer.msg("输入正确的手机号");
-        if (this.nickname && this.nickname.length < 1)return layer.msg("输入正确的昵称");
-        if (this.desc && this.phonenum.desc < 15)return layer.msg("输入文字内容");
-        if (this.img)return layer.msg("请上传图片");
+        if (this.phonenum.length < 11)return layer.msg("输入正确的手机号");
+        if (this.nickname.length < 1)return layer.msg("输入正确的昵称");
+        if (this.phonenum.desc < 1)return layer.msg("输入文字内容");
+        if (this.img==null)return layer.msg("请上传图片");
         ex.jsonp({
             url: baseUrl + "upload/?_method=GET",
             data: {
@@ -416,7 +416,7 @@ var page_sign = {
                 phonenum: this.phonenum
             },
             success: function (obj) {
-                //
+                if(test)test.alert(obj);
                 if (obj.code == 0) {
 
                 }
