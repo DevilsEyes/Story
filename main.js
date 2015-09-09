@@ -346,14 +346,22 @@ var page_story = {
         img: "http://img.meizhanggui.cc/093d5b74cbdc8e759c9ad6565cd5ec9d_W_1500X1029",
         desc: "这是一串长长的文字。里面有\n换行，还有不少 空  格"
     },
+    e$vote:function(){},
     init: function () {
         //ex.render('#page_story',page_story.data);
+        if(this.data.id=='')location.hash="#list";
+
         $('.page').hide();
         $('#page_story').show();
         ex.render('#page_story', page_story.data);
         footer.tab('story');
         $('.infoBox').hide();
         $('#loading').hide();
+
+        $('#page_story btn:eq(0)').click(this.e$vote);
+        $('#page_story btn:eq(1)').click(function(){location.hash='#sign';});
+        $('#page_story btn:eq(2)').click(function(){location.hash='#list';});
+        $('#page_story btn:eq(3)').click(function(){location.href='http://www.wenshendaka.com';});
     }
 };
 
@@ -409,7 +417,6 @@ var page_sign = {
     },
     init: function () {
 
-        if(this.data.id=='')location.hash="#list";
         //ex.render('#page_sign',page_sign.data);
         $('.page').hide();
         $('#page_sign').show();
