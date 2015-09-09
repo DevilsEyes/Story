@@ -256,6 +256,12 @@ header img{
     border-radius: 4px;
     background: #2a2b2d url("imgs/upload.png") no-repeat center;
     background-size: 25%;
+    overflow: hidden;
+}
+
+#upload img{
+    width: 100%;
+    vertical-align: middle;
 }
 
 #desc{

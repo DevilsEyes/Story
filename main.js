@@ -374,29 +374,13 @@ var page_sign = {
             count: 1,
             success: function (res) {
                 var localId = res.localIds[0];
-
-                if(window.test)test.alert({
-                    localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
-                    isShowProgressTips: 1, // 默认为1，显示进度提示
-                    success: function (res) {
-                        var serverId = res.serverId; // 返回图片的服务器端ID
-                        page_sign.img = serverId;
-                        $('#upload').css({
-                            background: 'url(' + serverId + ')',
-                            backgroundSize: 'cover'
-                        })
-                    }
-                });
                 wx.uploadImage({
                     localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
                     isShowProgressTips: 1, // 默认为1，显示进度提示
                     success: function (res) {
                         var serverId = res.serverId; // 返回图片的服务器端ID
                         page_sign.img = serverId;
-                        $('#upload').css({
-                            background: 'url(' + serverId + ')',
-                            backgroundSize: 'cover'
-                        })
+                        $('#upload').append("<img src='" + serverId + "'/>");
                     }
                 });
             }
