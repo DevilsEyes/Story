@@ -26,7 +26,7 @@ var g$url = {
         var state = this.param.state;
         alert("checkUrl-state:" + state);
         if(state!="true"){
-            alert("checkUrl-state-cookie:" + document.cookie);
+            alert("checkCode:"+this.param.code);
             document.cookie = "code="+ (this.param.code||null) +"&";
             alert("cookie:"+document.cookie);
             if(state=="false"){
