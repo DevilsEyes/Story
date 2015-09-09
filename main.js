@@ -1,11 +1,41 @@
 var baseUrl = 'http://182.92.161.173:5588/activities/productVote/';
 
-//var ROLE = {
-//    isAuth: false,
-//    code: '',
-//    openId: '',
-//    subscribe: 0
-//};
+ex.jsonp({
+    url: '',//获取openid等一系列参数的url
+    data: {
+        code: ROLE.code
+    },
+    success: function (obj) {
+        if (obj.success) {
+
+            ROLE.openId = obj.data.openId;
+            ROLE.subscribe = obj.data.subscribe;
+            document.cookie = 'openId=' + obj.data.openId + '&subscribe=' + obj.data.subscribe + '&';
+
+            ex.render('.infoBox', {
+                signCount: obj.data.signCount,
+                voteConut: obj.data.voteConut,
+                visitCount: obj.data.visitCount
+            });
+
+            routie({
+                "story/?:id": function (id) {
+                    page_story.id = id;
+                    page_story.init();
+                },
+                "story": function () {
+                    page_story.id = '';
+                    page_story.init();
+                },
+                "list": page_list.init,
+                "sign": page_sign.init
+            });
+        }
+        else {
+            layer.msg(obj.msg);
+        }
+    }
+});
 
 juicer.register('pageCreat', function (i, page, Maxpage) {
     if (page == i) {
@@ -40,35 +70,18 @@ window.addEventListener('load', function () {
         pageBox: $('#pageBoxTemp').html()
     };
 
-    routie({
-        "story/?:id": function (id) {
-            page_story.id = id;
-            page_story.init();
-        },
-        "story": function () {
-            page_story.id = '';
-            page_story.init();
-        },
-        "list": page_list.init,
-        "sign": page_sign.init
-    });
-
-    ex.render('.infoBox', {
-        signCount: 10,
-        voteConut: 20,
-        visitCount: 30
-    });
-
     WX.init();
 
 }, false);
 
 var WX = {
+    ready: false,
+    timer: null,
     init: function () {
         var wxUrl = encodeURIComponent(location.href.split('#')[0]),
             config = function (appId, timestamp, nonceStr, signature) {
                 wx.config({
-                    debug: true,
+                    debug: false,
                     appId: appId,
                     timestamp: timestamp,
                     nonceStr: nonceStr,
@@ -78,9 +91,13 @@ var WX = {
                         'onMenuShareAppMessage',
                         'onMenuShareQQ',
                         'onMenuShareWeibo',
+                        'onMenuShareQZone',
                         'chooseImage',
                         'uploadImage'
                     ]
+                });
+                wx.ready(function () {
+                    WX.ready = true;
                 });
             };
         $.ajax({
@@ -102,8 +119,27 @@ var WX = {
             }
         });
     },
-    set: function () {
-
+    set: function (obj) {
+        var shareObj = {
+            title: obj.title,
+            desc: obj.desc,
+            link: obj.link,
+            imgUrl: obj.imgUrl
+        };
+        if (WX.ready) {
+            wx.onMenuShareTimeline(shareObj);
+            wx.onMenuShareAppMessage(shareObj);
+            wx.onMenuShareQQ(shareObj);
+            wx.onMenuShareWeibo(shareObj);
+            wx.onMenuShareQZone(shareObj);
+        } else {
+            if (WX.timer)clearInterval(WX.timer);
+            WX.timer = setTimeout((function (shareObj) {
+                return function () {
+                    WX.set(shareObj);
+                }
+            })(shareObj), 100)
+        }
     }
 };
 
@@ -145,8 +181,9 @@ var myWindow = {
             title: false,
             closeBtn: false,
             shadeClose: true,
+            area:'250px',
             skin: 'tatoo',
-            content: '<a href="' + link + '">未关注公众号，没有投票权限。</a>'
+            content: '<a href="' + link + '">要给他投票<br>关注微信公众平台哦</a>'
         });
     },
     uploadSuccess: function () {
@@ -155,8 +192,9 @@ var myWindow = {
             title: false,
             closeBtn: false,
             shadeClose: true,
+            area:'250px',
             skin: 'tatoo',
-            content: '上传成功！'
+            content: '<a">恭喜报名成功<br><br>快让好友来投票吧</a>'
         });
     },
     voteSuccess: function () {
@@ -165,11 +203,11 @@ var myWindow = {
             title: false,
             closeBtn: false,
             shadeClose: true,
+            area:'250px',
             skin: 'tatoo',
-            content: '上传成功！'
+            content: '<a>投票成功!<br><br>不如点击参与活动<br>一块儿来玩呀</a>'
         });
     }
-
 };
 
 var footer = {
@@ -255,12 +293,13 @@ var page_list = {
         ex.jsonp({
             url: baseUrl + "vote/?_method=GET",
             data: {
-                id: page_list.list[index].id
+                id: page_list.list[index].id,
+                openId: ROLE.openId
             },
             success: function (obj) {
 
                 if (obj.success) {
-                    layer.msg("投票成功!");
+                    myWindow.voteSuccess();
                     page_list.list[index].vote++;
                     page_list.toPage(page_list.data.page);
                 } else {
@@ -270,7 +309,7 @@ var page_list = {
         }, this);
     },
     toPage: function (page) {
-
+        this.data.page = page;
         var url = this.tab == 'time' ? "getCreateTimeList" : "getVoteNumList";
         ex.jsonp({
             url: baseUrl + url + "/?_method=GET",
@@ -279,8 +318,7 @@ var page_list = {
                 index: (this.data.page - 1) * 6
             },
             success: function (obj) {
-                //
-                console.dir(obj);
+
                 if (obj.success) {
                     page_list.list = obj.data;
                     ex.render('#itemList', page_list.data);
@@ -336,7 +374,6 @@ var page_list = {
 var page_story = {
     id: null,
     data: {
-        id:null,
         index: 120,
         name: '呵呵哒',
         vote: 279,
@@ -358,7 +395,7 @@ var page_story = {
             success: function (obj) {
 
                 if (obj.success) {
-                    layer.msg("投票成功!");
+                    myWindow.voteSuccess();
                     page_story.data.vote++;
                     $('#page_story .vote').text('票数：' + page_story.data.vote);
                 } else {
@@ -368,25 +405,55 @@ var page_story = {
         }, this);
     },
     init: function () {
-        //ex.render('#page_story',page_story.data);
-        if (this.data.id == '')location.hash = "#list";
 
-        $('.page').hide();
-        $('#page_story').show();
-        ex.render('#page_story', page_story.data);
-        footer.tab('story');
-        $('.infoBox').hide();
-        $('#loading').hide();
+        if (this.data.id == '')return location.hash = "#list";
+        ex.jsonp({
+            url: baseUrl + "getProductDetails?_method=GET",
+            data: {
+                id: this.data.id
+            },
+            success: function (obj) {
+                if (obj.success) {
+                    page_story.data = {
+                        index: obj.data.id,
+                        name: obj.data.authorName,
+                        vote: obj.data.voteNum,
+                        rank: obj.data.authorName,
+                        x: 50,
+                        img: obj.data.images[0],
+                        desc: obj.data.content
+                    };
+                    ex.render('#page_story', page_story.data);
 
-        $('#page_story .btn:eq(0)').click(this.e$vote);
-        $('#page_story .btn:eq(1)').click(function () {
-            location.hash = '#sign';
-        });
-        $('#page_story .btn:eq(2)').click(function () {
-            location.hash = '#list';
-        });
-        $('#page_story .btn:eq(3)').click(function () {
-            location.href = 'http://www.wenshendaka.com';
+                    WX.set({
+                        title: obj.data.authorName + "的参选作品",
+                        link: location.origin + location.pathname + '#story/' + page_story.id,
+                        imgUrl: obj.data.images[0],
+                        desc: '快来给我投票吧！'
+                    });
+
+                    $('.page').hide();
+                    $('#page_story').show();
+                    footer.tab('story');
+                    $('.infoBox').hide();
+                    $('#loading').hide();
+
+                    $('#page_story .btn:eq(0)').click(this.e$vote);
+                    $('#page_story .btn:eq(1)').click(function () {
+                        location.hash = '#sign';
+                    });
+                    $('#page_story .btn:eq(2)').click(function () {
+                        location.hash = '#list';
+                    });
+                    $('#page_story .btn:eq(3)').click(function () {
+                        location.href = 'http://www.wenshendaka.com';
+                    });
+                }
+                else {
+                    layer.msg(obj.msg);
+                    location.hash = "#list";
+                }
+            }
         });
     }
 };
@@ -425,7 +492,7 @@ var page_sign = {
         if (this.phonenum.length < 11)return layer.msg("输入正确的手机号");
         if (this.nickname.length < 1)return layer.msg("输入正确的昵称");
         if (this.phonenum.desc < 1)return layer.msg("输入文字内容");
-        if (this.img==null)return layer.msg("请上传图片");
+        if (this.img == null)return layer.msg("请上传图片");
         ex.jsonp({
             url: baseUrl + "upload/?_method=GET",
             data: {
@@ -436,9 +503,15 @@ var page_sign = {
                 phonenum: this.phonenum
             },
             success: function (obj) {
-                if(test)test.alert(obj);
+                if (test)test.alert(obj);
                 if (obj.success) {
-
+                    WX.set({
+                        title: page_sign.nickname + "的参选作品",
+                        link: location.origin + location.pathname + '#story/' + obj.data.id,
+                        imgUrl: obj.data.image[0],
+                        desc: '快来给我投票吧！'
+                    });
+                    myWindow.uploadSuccess();
                 }
             }
         })

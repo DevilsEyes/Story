@@ -36,6 +36,21 @@ var g$url = {
                 g$url.getWxAuth();
             }
         }
+    },
+    checkCookie:function(){
+        var openId = document.cookie.match(/openId=([^\b&]*)/);
+        var subscribe = document.cookie.match(/subscribe=([^\b&]*)/);
+        if(openId&&openId[1]&&subscribe&&subscribe[1]){
+            ROLE={
+                isAuth:true,
+                code:null,
+                openId:openId,
+                subscribe:subscribe
+            };
+            return true;
+        }else{
+            return false;
+        }
     }
 };
 
@@ -46,7 +61,7 @@ var ROLE = {
     subscribe:0
 };
 if(!g$url.getParam().state){
-    g$url.getWxAuth();
+    if(!g$url.checkCookie())g$url.getWxAuth();
 }else{
     g$url.checkUrl();
 }
