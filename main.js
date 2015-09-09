@@ -374,13 +374,18 @@ var page_sign = {
             count: 1,
             success: function (res) {
                 var localId = res.localIds[0];
+
                 wx.uploadImage({
                     localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
                     isShowProgressTips: 1, // 默认为1，显示进度提示
                     success: function (res) {
+                        if(test)test.alert(res);
                         var serverId = res.serverId; // 返回图片的服务器端ID
                         page_sign.img = serverId;
-                        $('#upload').append("<img src='" + serverId + "'/>");
+                        $('#upload').css({
+                            "background-image": 'url("' + localId + '")',
+                            "background-size": 'cover'
+                        })
                     }
                 });
             }
