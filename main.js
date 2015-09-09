@@ -1,5 +1,12 @@
 var baseUrl = 'http://182.92.161.173:5588/activities/productVote/';
 
+var ROLE = {
+    isAuth: false,
+    code: '',
+    openId: '',
+    subscribe: 0
+};
+
 juicer.register('pageCreat', function (i, page, Maxpage) {
     if (page == i) {
         return '<li class="nowPage">' + i + '</li>';
@@ -133,16 +140,27 @@ var ex = {
 
 var myWindow = {
     notAttention: function () {
+        var link = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=207445005&idx=1&sn=b1806776c747dfd039f56799036bc056#rd';
         layer.open({
             type: 1,
             title: false,
             closeBtn: false,
             shadeClose: true,
             skin: 'tatoo',
-            content: '<a href="http://www.baidu.com">未关注公众号，没有投票权限。</a>'
+            content: '<a href="'+link+'">未关注公众号，没有投票权限。</a>'
         });
     },
-    uploadSuccess:function(){
+    uploadSuccess: function () {
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: false,
+            shadeClose: true,
+            skin: 'tatoo',
+            content: '上传成功！'
+        });
+    },
+    voteSuccess: function () {
         layer.open({
             type: 1,
             title: false,
@@ -231,6 +249,7 @@ var page_list = {
         this.toPage(i)
     },
     e$vote: function (index) {
+        alert(index);
         if (ROLE.subscribe == 0) {
             myWindow.notAttention();
             return;
@@ -263,21 +282,25 @@ var page_list = {
             },
             success: function (obj) {
                 //obj = $.parseJSON(obj);
-                console.dir(obj)
+                console.dir(obj);
                 if (obj.success) {
                     page_list.list = obj.data;
                     ex.render('#itemList', page_list.data);
                     ex.render('#pageBox', page_list.data);
                     pbl.Set();
-                    $('#itemList li').each(function () {
-                        $(this).click(function () {
-                            location.hash = "#story/" + page_list.list[index].id;
-                        })
+                    $('#itemList li img').each(function (index) {
+                        $(this).click((function (index) {
+                            return function () {
+                                location.hash = "#story/" + page_list.list[index].id;
+                            }
+                        })(index))
                     });
-                    $('#itemList li .votebtn').each(function () {
-                        $(this).click(function () {
-                            page_list.e$vote(index);
-                        })
+                    $('#itemList li .votebtn').each(function (index) {
+                        $(this).click((function (index) {
+                            return function () {
+                                page_list.e$vote(index);
+                            }
+                        })(index))
                     });
                     $('#pageBox li').each(function () {
                         $(this).click(function () {
@@ -363,34 +386,39 @@ var page_sign = {
         this.nickname = $('#name').val();
         this.phonenum = $('#phonenum').val();
         this.desc = $('#desc').val();
-        if(this.phonenum&&this.phonenum.length<11)return layer.msg("输入正确的手机号");
-        if(this.nickname&&this.nickname.length<1)return layer.msg("输入正确的昵称");
-        if(this.desc&&this.phonenum.desc<15)return layer.msg("输入文字内容");
-        if(this.img)return layer.msg("请上传图片");
+        if (this.phonenum && this.phonenum.length < 11)return layer.msg("输入正确的手机号");
+        if (this.nickname && this.nickname.length < 1)return layer.msg("输入正确的昵称");
+        if (this.desc && this.phonenum.desc < 15)return layer.msg("输入文字内容");
+        if (this.img)return layer.msg("请上传图片");
         ex.jsonp({
-            url:baseUrl + "upload/?_method=GET",
-            data:{
-                authorName:this.nickname,
-                images:[this.img],
-                content:this.desc,
-                openId:ROLE.openId,
-                phonenum:this.phonenum
+            url: baseUrl + "upload/?_method=GET",
+            data: {
+                authorName: this.nickname,
+                images: [this.img],
+                content: this.desc,
+                openId: ROLE.openId,
+                phonenum: this.phonenum
             },
-            success:function(obj){
-                obj= $.parseJSON(obj);
-                if(obj.code==0){
+            success: function (obj) {
+                obj = $.parseJSON(obj);
+                if (obj.code == 0) {
 
                 }
             }
         })
     },
     init: function () {
+
+        if(this.data.id=='')location.hash="#list";
         //ex.render('#page_sign',page_sign.data);
         $('.page').hide();
         $('#page_sign').show();
         footer.tab('sign');
         $('.infoBox').show();
         $('#loading').hide();
+
+        $('#upload').click(this.e$uploadImg);
+        $('#page_sign .btn').click(this.e$uploadProduct);
     }
 };
 
