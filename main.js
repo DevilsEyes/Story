@@ -88,9 +88,9 @@ var WX = {
             success: function (obj) {
                 //obj = $.parseJSON(obj);
                 console.dir(obj);
-                var appId = obj.data.app_id,
+                var appId = obj.data.appId,
                     timestamp = obj.data.timestamp,
-                    nonceStr = obj.data.noncestr,
+                    nonceStr = obj.data.nonceStr,
                     signature = obj.data.signature;
                 config(appId, timestamp, nonceStr, signature);
             }
