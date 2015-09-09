@@ -24,7 +24,7 @@ var g$url = {
         var state = g$url.param.state;
         if(state!="true"){
             document.cookie = "code="+ (g$url.param.code||null) +"&";
-            location.href = location.origin + location.pathname +'?state=true'+(state=="false"?'#list':state);
+            location.href = location.origin + location.pathname +'?state=true'+(state=="false"?'#list':'#'+state);
         }else{
             var code = document.cookie.match(/code=([^\b&]*)/);
             if(code){
