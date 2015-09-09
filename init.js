@@ -12,20 +12,23 @@ var g$url = {
             if (arg.length == 1) this.param[arg[0]] = true;
             else this.param[arg[0]] = arg[1];
         }
-        if(test)test.alert(this.param);
+        alert("this.param.hash:" + this.param.hash);
+        alert("this.param.state:" + this.param.state);
 
         if(location.hash)this.param.hash = location.hash.substr(1);
         return this.param;
     },
     getWxAuth:function(){
+        alert("getWxAuth");
         var REURI = encodeURIComponent(location.origin + location.pathname),
             STATE = this.param.hash||"false";
         return location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf72ed77c92113ec4&redirect_uri="+REURI+"&response_type=code&scope=snsapi_userinfo&state="+STATE+"#wechat_redirect"
     },
     checkUrl:function(){
-        if(test)test.alert(this.param);
         var state = this.param.state;
+        alert("checkUrl-state:" + state);
         if(state!="true"){
+            alert("checkUrl-state-cookie:" + document.cookie);
             document.cookie = "code="+ (this.param.code||null) +"&";
             if(state=="false"){
                 location.href = location.origin + location.pathname + '?state=true#list'
@@ -34,6 +37,7 @@ var g$url = {
             }
         }else{
             var code = document.cookie.match(/code=([^\b&]*)/);
+            alert("checkUrl-state-code:" + code);
             if(code){
                 code = code[1];
                 ROLE.code=code;
@@ -54,6 +58,7 @@ var ROLE = {
     subscribe:0
 };
 
+alert("!g$url.getParam().state:"+!g$url.getParam().state);
 if(!g$url.getParam().state){
     g$url.getWxAuth();
 }else{
