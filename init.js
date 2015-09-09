@@ -27,8 +27,7 @@ var g$url = {
             location.href = location.origin + location.pathname +'?state=true'+(state=="false"?'#list':'#'+state);
         }else{
             var code = document.cookie.match(/code=([^\b&]*)/);
-            test&&test.alert(code);
-            if(code){
+            if(code&&code[1]){
                 code = code[1];
                 ROLE.code=code;
                 ROLE.isAuth=true;
