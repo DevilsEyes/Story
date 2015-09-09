@@ -13,6 +13,8 @@ var g$url = {
             else g$url.param[arg[0]] = arg[1];
         }
 
+        test.alert(g$url.param);
+
         if(location.hash)g$url.param.hash = location.hash.substr(1);
         return g$url.param;
     },
