@@ -41,7 +41,7 @@ ex.jsonp({
             test.alert(obj);
             ROLE.unionid = obj.data.unionid;
             ROLE.subscribe = obj.data.subscribe;
-            document.cookie = 'unionid=' + obj.data.unionid + '&subscribe=' + obj.data.subscribe + '&';
+            //document.cookie = 'unionid=' + obj.data.unionid + '&subscribe=' + obj.data.subscribe + '&';
 
             ex.render('.infoBox', {
                 signCount: obj.data.signCount,

@@ -36,23 +36,22 @@ var g$url = {
                 g$url.getWxAuth();
             }
         }
-    },
-    checkCookie:function(){
-        var unionid = document.cookie.match(/unionid=([^\b&]*)/);
-        var subscribe = document.cookie.match(/subscribe=([^\b&]*)/);
-        test.alert('unionid:'+unionid+'subscribe:'+subscribe);
-        if(unionid&&unionid[1]&&subscribe&&subscribe[1]){
-            ROLE={
-                isAuth:true,
-                code:null,
-                unionid:unionid,
-                subscribe:subscribe
-            };
-            return false;
-        }else{
-            return true;
-        }
     }
+    //checkCookie:function(){
+    //    var unionid = document.cookie.match(/unionid=([^\b&]*)/);
+    //    var subscribe = document.cookie.match(/subscribe=([^\b&]*)/);
+    //    if(unionid&&unionid[1]&&subscribe&&subscribe[1]){
+    //        ROLE={
+    //            isAuth:true,
+    //            code:null,
+    //            unionid:unionid,
+    //            subscribe:subscribe
+    //        };
+    //        return false;
+    //    }else{
+    //        return true;
+    //    }
+    //}
 };
 
 var ROLE = {
@@ -62,7 +61,7 @@ var ROLE = {
     subscribe:0
 };
 if(!g$url.getParam().state){
-    if(g$url.checkCookie())g$url.getWxAuth();
+    g$url.getWxAuth();
 }else{
     g$url.checkUrl();
 }
