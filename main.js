@@ -1,41 +1,41 @@
 var baseUrl = 'http://182.92.161.173:5588/activities/productVote/';
 
-//ex.jsonp({
-//    url: '',//获取openid等一系列参数的url
-//    data: {
-//        code: ROLE.code
-//    },
-//    success: function (obj) {
-//        if (obj.success) {
-//
-//            ROLE.openId = obj.data.openId;
-//            ROLE.subscribe = obj.data.subscribe;
-//            document.cookie = 'openId=' + obj.data.openId + '&subscribe=' + obj.data.subscribe + '&';
-//
-//            ex.render('.infoBox', {
-//                signCount: obj.data.signCount,
-//                voteConut: obj.data.voteConut,
-//                visitCount: obj.data.visitCount
-//            });
-//
-//            routie({
-//                "story/?:id": function (id) {
-//                    page_story.id = id;
-//                    page_story.init();
-//                },
-//                "story": function () {
-//                    page_story.id = '';
-//                    page_story.init();
-//                },
-//                "list": page_list.init,
-//                "sign": page_sign.init
-//            });
-//        }
-//        else {
-//            layer.msg(obj.msg);
-//        }
-//    }
-//});
+ex.jsonp({
+    url: '',//获取openid等一系列参数的url
+    data: {
+        code: ROLE.code
+    },
+    success: function (obj) {
+        if (obj.success) {
+
+            ROLE.openId = obj.data.openId;
+            ROLE.subscribe = obj.data.subscribe;
+            document.cookie = 'openId=' + obj.data.openId + '&subscribe=' + obj.data.subscribe + '&';
+
+            ex.render('.infoBox', {
+                signCount: obj.data.signCount,
+                voteConut: obj.data.voteConut,
+                visitCount: obj.data.visitCount
+            });
+
+            routie({
+                "story/?:id": function (id) {
+                    page_story.id = id;
+                    page_story.init();
+                },
+                "story": function () {
+                    page_story.id = '';
+                    page_story.init();
+                },
+                "list": page_list.init,
+                "sign": page_sign.init
+            });
+        }
+        else {
+            layer.msg(obj.msg);
+        }
+    }
+});
 
 juicer.register('pageCreat', function (i, page, Maxpage) {
     if (page == i) {
@@ -81,7 +81,7 @@ var WX = {
         var wxUrl = encodeURIComponent(location.href.split('#')[0]),
             config = function (appId, timestamp, nonceStr, signature) {
                 wx.config({
-                    debug: true,
+                    debug: false,
                     appId: appId,
                     timestamp: timestamp,
                     nonceStr: nonceStr,
