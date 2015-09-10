@@ -8,6 +8,7 @@ var ex = {
             data: obj.data ? obj.data : null,
             success: obj.success,
             error: obj.error ? obj.error : function () {
+                test.alert(obj.url);
                 layer.msg('您的网络连接不太顺畅哦!');
             },
             beforeSend: obj.beforeSend ? obj.beforeSend : function () {
@@ -37,7 +38,7 @@ ex.jsonp({
     },
     success: function (obj) {
         if (obj.success) {
-
+            test.alert(obj);
             ROLE.unionid = obj.data.unionid;
             ROLE.subscribe = obj.data.subscribe;
             document.cookie = 'unionid=' + obj.data.unionid + '&subscribe=' + obj.data.subscribe + '&';
@@ -140,7 +141,6 @@ var WX = {
             beforeSend: function () {
             },
             success: function (obj) {
-                test.alert(obj);
                 console.dir(obj);
                 var appId = obj.data.appId,
                     timestamp = obj.data.timestamp,
