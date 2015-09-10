@@ -1,5 +1,36 @@
 var baseUrl = 'http://182.92.161.173:5588/activities/productVote/';
 test.alert('code:'+ROLE.code);
+
+var ex = {
+    jsonp: function (obj, pageObj) {
+        $.jsonp({
+            url: obj.url,
+            callbackParameter: obj.callbackParameter ? obj.callbackParameter : "callback",
+            data: obj.data ? obj.data : null,
+            success: obj.success,
+            error: obj.error ? obj.error : function () {
+                layer.msg('您的网络连接不太顺畅哦!');
+            },
+            beforeSend: obj.beforeSend ? obj.beforeSend : function () {
+                $('#loading').show();
+                pageObj ? pageObj.isClick = true : null;
+            },
+            complete: obj.complete ? obj.complete : function () {
+                $('#loading').hide();
+                pageObj ? pageObj.isClick = false : null;
+            }
+        })
+    },
+    render: function (selector, data) {
+        if (ex.template[selector.substr(1)]) {
+            $(selector).html(juicer(ex.template[selector.substr(1)], data));
+        } else {
+            $(selector).html(juicer($(selector).html(), data));
+        }
+    },
+    template: {}
+};
+
 ex.jsonp({
     url: 'http://activity.meizhanggui.cc/weixinAuth2/userInfo?_method=GET',//获取openid等一系列参数的url
     data: {
@@ -142,36 +173,6 @@ var WX = {
             })(shareObj), 100)
         }
     }
-};
-
-var ex = {
-    jsonp: function (obj, pageObj) {
-        $.jsonp({
-            url: obj.url,
-            callbackParameter: obj.callbackParameter ? obj.callbackParameter : "callback",
-            data: obj.data ? obj.data : null,
-            success: obj.success,
-            error: obj.error ? obj.error : function () {
-                layer.msg('您的网络连接不太顺畅哦!');
-            },
-            beforeSend: obj.beforeSend ? obj.beforeSend : function () {
-                $('#loading').show();
-                pageObj ? pageObj.isClick = true : null;
-            },
-            complete: obj.complete ? obj.complete : function () {
-                $('#loading').hide();
-                pageObj ? pageObj.isClick = false : null;
-            }
-        })
-    },
-    render: function (selector, data) {
-        if (ex.template[selector.substr(1)]) {
-            $(selector).html(juicer(ex.template[selector.substr(1)], data));
-        } else {
-            $(selector).html(juicer($(selector).html(), data));
-        }
-    },
-    template: {}
 };
 
 var myWindow = {
