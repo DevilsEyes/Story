@@ -46,3 +46,11 @@ window.test={
         }
     }
 };
+
+
+var ROLE = {
+    isAuth:true,
+    code:'',
+    unionid:'asd8y9812jdiaosijd',
+    subscribe:false
+};

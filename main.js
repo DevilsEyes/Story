@@ -1,5 +1,4 @@
 var baseUrl = 'http://182.92.161.173:5588/activities/productVote/';
-test.alert('code:'+ROLE.code);
 
 var ex = {
     jsonp: function (obj, pageObj) {
@@ -37,7 +36,6 @@ ex.jsonp({
         code: ROLE.code
     },
     success: function (obj) {
-        test.alert(obj);
         if (obj.success) {
 
             ROLE.unionid = obj.data.unionid;
@@ -113,7 +111,7 @@ var WX = {
         var wxUrl = encodeURIComponent(location.href.split('#')[0]),
             config = function (appId, timestamp, nonceStr, signature) {
                 wx.config({
-                    debug: false,
+                    debug: true,
                     appId: appId,
                     timestamp: timestamp,
                     nonceStr: nonceStr,
