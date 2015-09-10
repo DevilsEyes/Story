@@ -32,7 +32,7 @@ var ex = {
 };
 
 ex.jsonp({
-    url: 'http://activity.meizhanggui.cc/weixinAuth2/userInfo?_method=GET',//获取openid等一系列参数的url
+    url: 'http://activity.meizhanggui.cc/weixinAuth2/userInfo?_method=GET',//获取unionid等一系列参数的url
     data: {
         code: ROLE.code
     },
@@ -40,9 +40,9 @@ ex.jsonp({
         test.alert(obj);
         if (obj.success) {
 
-            ROLE.openId = obj.data.openId;
+            ROLE.unionid = obj.data.unionid;
             ROLE.subscribe = obj.data.subscribe;
-            document.cookie = 'openId=' + obj.data.openId + '&subscribe=' + obj.data.subscribe + '&';
+            document.cookie = 'unionid=' + obj.data.unionid + '&subscribe=' + obj.data.subscribe + '&';
 
             ex.render('.infoBox', {
                 signCount: obj.data.signCount,
@@ -296,7 +296,7 @@ var page_list = {
             url: baseUrl + "vote/?_method=GET",
             data: {
                 id: page_list.list[index].id,
-                openId: ROLE.openId
+                unionid: ROLE.unionid
             },
             success: function (obj) {
 
@@ -501,7 +501,7 @@ var page_sign = {
                 authorName: this.nickname,
                 images: [this.img],
                 content: this.desc,
-                openId: ROLE.openId,
+                unionid: ROLE.unionid,
                 phonenum: this.phonenum
             },
             success: function (obj) {

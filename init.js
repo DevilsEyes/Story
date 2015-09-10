@@ -38,13 +38,13 @@ var g$url = {
         }
     },
     checkCookie:function(){
-        var openId = document.cookie.match(/openId=([^\b&]*)/);
+        var unionid = document.cookie.match(/unionid=([^\b&]*)/);
         var subscribe = document.cookie.match(/subscribe=([^\b&]*)/);
-        if(openId&&openId[1]&&subscribe&&subscribe[1]){
+        if(unionid&&unionid[1]&&subscribe&&subscribe[1]){
             ROLE={
                 isAuth:true,
                 code:null,
-                openId:openId,
+                unionid:unionid,
                 subscribe:subscribe
             };
             return true;
@@ -57,7 +57,7 @@ var g$url = {
 var ROLE = {
     isAuth:false,
     code:'',
-    openId:'',
+    unionid:'',
     subscribe:0
 };
 if(!g$url.getParam().state){
