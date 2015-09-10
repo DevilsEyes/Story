@@ -40,6 +40,7 @@ var g$url = {
     checkCookie:function(){
         var unionid = document.cookie.match(/unionid=([^\b&]*)/);
         var subscribe = document.cookie.match(/subscribe=([^\b&]*)/);
+        test.alert('unionid:'+unionid+'subscribe:'+subscribe);
         if(unionid&&unionid[1]&&subscribe&&subscribe[1]){
             ROLE={
                 isAuth:true,
@@ -47,9 +48,9 @@ var g$url = {
                 unionid:unionid,
                 subscribe:subscribe
             };
-            return true;
-        }else{
             return false;
+        }else{
+            return true;
         }
     }
 };
@@ -61,7 +62,7 @@ var ROLE = {
     subscribe:0
 };
 if(!g$url.getParam().state){
-    if(!g$url.checkCookie())g$url.getWxAuth();
+    if(g$url.checkCookie())g$url.getWxAuth();
 }else{
     g$url.checkUrl();
 }
