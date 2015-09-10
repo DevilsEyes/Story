@@ -140,6 +140,7 @@ var WX = {
             beforeSend: function () {
             },
             success: function (obj) {
+                test.alert(obj);
                 console.dir(obj);
                 var appId = obj.data.appId,
                     timestamp = obj.data.timestamp,
