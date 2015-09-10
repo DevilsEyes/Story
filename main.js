@@ -70,19 +70,6 @@ window.addEventListener('load', function () {
         pageBox: $('#pageBoxTemp').html()
     };
 
-    routie({
-        "story/?:id": function (id) {
-            page_story.id = id;
-            page_story.init();
-        },
-        "story": function () {
-            page_story.id = '';
-            page_story.init();
-        },
-        "list": page_list.init,
-        "sign": page_sign.init
-    });
-
     WX.init();
 
 }, false);
