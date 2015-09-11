@@ -21,7 +21,6 @@ var ex = {
         })
     },
     render: function (selector, data) {
-            test.alert(data);
         if (ex.template[selector.substr(1)]) {
             $(selector).html(juicer(ex.template[selector.substr(1)], data));
             return juicer(ex.template[selector.substr(1)], data);
@@ -68,6 +67,17 @@ if (ROLE.code) {
                 ROLE.subscribed = obj.data.subscribed;
                 //document.cookie = 'unionid=' + obj.data.unionid + '&subscribed=' + obj.data.subscribed + '&';
 
+                ex.template = {
+                    page_list: $('#page_list').html(),
+                    page_story: $('#pageStoryTemp').html(),
+                    itemList: $('#itemListTemp').html(),
+                    pageBox: $('#pageBoxTemp').html()
+                };
+
+                $('#pageStoryTemp').remove();
+                $('#itemListTemp').remove();
+                $('#pageBoxTemp').remove();
+
                 ex.render('.infoBox', {
                     signCount: obj.data.signCount,
                     voteConut: obj.data.voteCount,
@@ -100,13 +110,6 @@ if (ROLE.code) {
 
 window.addEventListener('load', function () {
     FastClick.attach(document.body);
-
-    ex.template = {
-        page_list: $('#page_list').html(),
-        page_story: $('#page_story').html(),
-        itemList: $('#itemListTemp').html(),
-        pageBox: $('#pageBoxTemp').html()
-    };
 
     //routie({
     //    "story/?:id": function (_id) {
@@ -408,6 +411,7 @@ var page_story = {
                         img: obj.data.images[0],
                         desc: obj.data.content
                     };
+                    ex.render('#page_story', page_story.data);
                     $('footer a:eq(0)').attr('href','#story'+page_story._id);
 
                     WX.set({
