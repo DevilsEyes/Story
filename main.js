@@ -78,7 +78,6 @@ if (ROLE.code) {
 
                 routie({
                     "story/?:id": function (id) {
-                        alert("geiId:" + id);
                         page_story._id = id;
                         page_story.init();
                     },
@@ -399,6 +398,7 @@ var page_story = {
             },
             success: function (obj) {
                 if (obj.success) {
+                    test.alert(obj);
                     page_story.data = {
                         index: obj.data.productNumber,
                         name: obj.data.authorName,
@@ -408,7 +408,7 @@ var page_story = {
                         img: obj.data.images[0],
                         desc: obj.data.content
                     };
-                    ex.render('#page_story', page_story.data);
+                    alert(ex.render('#page_story', page_story.data));
                     $('footer a:eq(0)').attr('href','#story'+page_story._id);
 
                     WX.set({
