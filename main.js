@@ -21,10 +21,7 @@ var ex = {
         })
     },
     render: function (selector, data) {
-        if(selector=='#page_story'){
             test.alert(data);
-            alert(ex.template[selector.substr(1)]);
-        }
         if (ex.template[selector.substr(1)]) {
             $(selector).html(juicer(ex.template[selector.substr(1)], data));
             return juicer(ex.template[selector.substr(1)], data);
