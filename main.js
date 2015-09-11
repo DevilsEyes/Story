@@ -22,14 +22,14 @@ var ex = {
     },
     render: function (selector, data) {
         if (ex.template[selector.substr(1)]) {
-            if(selector='#page_story'){
+            if(selector=='#page_story'){
                 alert('temlateGet');
                 test.alert(data);
             }
             $(selector).html(juicer(ex.template[selector.substr(1)], data));
             return juicer(ex.template[selector.substr(1)], data);
         } else {
-            if(selector='#page_story'){
+            if(selector=='#page_story'){
                 alert('temlateNotfound');
                 test.alert(data);
             }
