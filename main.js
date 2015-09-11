@@ -22,9 +22,17 @@ var ex = {
     },
     render: function (selector, data) {
         if (ex.template[selector.substr(1)]) {
+            if(selector='#page_story'){
+                alert('temlateGet');
+                test.alert(data);
+            }
             $(selector).html(juicer(ex.template[selector.substr(1)], data));
             return juicer(ex.template[selector.substr(1)], data);
         } else {
+            if(selector='#page_story'){
+                alert('temlateNotfound');
+                test.alert(data);
+            }
             $(selector).html(juicer($(selector).html(), data));
             return juicer($(selector).html(), data);
         }
@@ -398,7 +406,6 @@ var page_story = {
             },
             success: function (obj) {
                 if (obj.success) {
-                    test.alert(obj);
                     page_story.data = {
                         index: obj.data.productNumber,
                         name: obj.data.authorName,
@@ -408,7 +415,6 @@ var page_story = {
                         img: obj.data.images[0],
                         desc: obj.data.content
                     };
-                    alert(ex.render('#page_story', page_story.data));
                     $('footer a:eq(0)').attr('href','#story'+page_story._id);
 
                     WX.set({
