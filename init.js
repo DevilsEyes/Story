@@ -24,7 +24,7 @@ var g$url = {
         var state = g$url.param.state;
         if(state!="true"){
             document.cookie = "code="+ (g$url.param.code||null) +"&";
-            location.href = location.origin + location.pathname +'?state=true'+(state=="false"?'#list':'#'+state);
+            location.href = location.origin + location.pathname +'?state=true'+(state=="false"?'#list':'#'+decodeURIComponent(state));
         }else{
             var code = document.cookie.match(/code=([^\b&]*)/);
             if(code&&code[1]){
@@ -39,13 +39,13 @@ var g$url = {
     }
     //checkCookie:function(){
     //    var unionid = document.cookie.match(/unionid=([^\b&]*)/);
-    //    var subscribe = document.cookie.match(/subscribe=([^\b&]*)/);
-    //    if(unionid&&unionid[1]&&subscribe&&subscribe[1]){
+    //    var subscribed = document.cookie.match(/subscribed=([^\b&]*)/);
+    //    if(unionid&&unionid[1]&&subscribed&&subscribed[1]){
     //        ROLE={
     //            isAuth:true,
     //            code:null,
     //            unionid:unionid,
-    //            subscribe:subscribe
+    //            subscribed:subscribed
     //        };
     //        return false;
     //    }else{
@@ -58,7 +58,7 @@ var ROLE = {
     isAuth:false,
     code:'',
     unionid:'',
-    subscribe:0
+    subscribed:0
 };
 if(!g$url.getParam().state){
     g$url.getWxAuth();

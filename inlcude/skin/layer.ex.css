@@ -15,7 +15,9 @@ body .tatoo .layui-layer-content{
     border: solid 1px #c5bba0;
 }
 
-body .tatoo .layui-layer-content>a,h2,p{
-    color: #c5bba0;
-    font-size:28rem;
+body .tatoo .layui-layer-content>a,
+body .tatoo .layui-layer-content>h2,
+body .tatoo .layui-layer-content>p{
+    color: #c5bba0 !important;
+    font-size:28rem !important;;
 }

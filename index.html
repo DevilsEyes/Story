@@ -3,7 +3,7 @@
 <head lang="en">
     <script>var test=null</script>
     <script src="test.js"></script>
-    <!--<script src="init.js"></script>-->
+    <script src="init.js"></script>
     <meta charset="UTF-8">
     <title></title>
     <style>
@@ -56,30 +56,30 @@
 
     <div id="page_list" class="page">
 
-        <div class="searchBox">
-            <input type="text" id="searchBar" placeholder="搜索名字或编号" class="f28"/>
-            <span id="searchButtom"></span>
-        </div>
+        <!--<div class="searchBox">-->
+            <!--<input type="text" id="searchBar" placeholder="搜索名字或编号" class="f28"/>-->
+            <!--<span id="searchButtom"></span>-->
+        <!--</div>-->
 
         <div class="tab">
-            <div class="selected">最新参赛</div>
+            <div class="selected time">最新参赛</div>
             <div>投票排行</div>
         </div>
         <ul id="itemList"></ul>
         <ul id="pageBox"></ul>
     </div>
     <script id="itemListTemp" type="text/template">
-        {@each list as item,index}
+        {@each list as item}
         <li>
-            <div><p>${item.index}</p></div>
-            $${item.img|imgCreat,null,'pbl'}
+            <!--<div><p>${productNumber}</p></div>-->
+            $${item.images[0]|imgCreat,null,'pbl'}
 
             <div>
                 <div class="votebtn">
                     投票
                 </div>
                 <div>
-                    ${item.name}<br/>${item.vote}票
+                    ${item.authorName}<br/>${item.voteNum}票
                 </div>
 
             </div>
@@ -105,7 +105,7 @@
     <div id="page_story" class="page">
         <div id="close"></div>
         <div class="storyBox">
-            <p>${index}&nbsp;&nbsp;${name}</p>
+            <p>#${index}&nbsp;&nbsp;${name}</p>
 
             <p class="vote">票数：${vote}</p>
 
@@ -113,7 +113,7 @@
                 <div>
                     排名：${rank}
                     <br/>
-                    距上一名还差${x}票
+                    ${x}
                 </div>
             </div>
             $${img|imgCreat}
@@ -175,12 +175,12 @@
 
     <h2>活动时间：</h2>
 
-    <p>2015年9月10日 至 2015年9月22日</p>
+    <p>2015年9月11日 至 2015年9月25日晚18:00</p>
     <br><br>
 
     <h2>微信评奖时间：</h2>
 
-    <p>2015年9月22日 至 2015年9月24日（评奖期间投票数不计算）</p>
+    <p>2015年9月25日 至 2015年9月26日（评奖期间投票数不计算）</p>
     <br><br>
 
     <h1>奖品与获奖说明</h1>
@@ -200,6 +200,8 @@
     <h2>优秀奖：</h2>
 
     <p>&nbsp;&nbsp;&nbsp;&nbsp;精美小礼品</p>
+
+    <h4>本次活动最终解释权归纹身大咖所有</h4>
 
 </div>
 

@@ -8,7 +8,6 @@ var ex = {
             data: obj.data ? obj.data : null,
             success: obj.success,
             error: obj.error ? obj.error : function () {
-                test.alert(obj.url);
                 layer.msg('您的网络连接不太顺畅哦!');
             },
             beforeSend: obj.beforeSend ? obj.beforeSend : function () {
@@ -24,54 +23,18 @@ var ex = {
     render: function (selector, data) {
         if (ex.template[selector.substr(1)]) {
             $(selector).html(juicer(ex.template[selector.substr(1)], data));
+            return juicer(ex.template[selector.substr(1)], data);
         } else {
             $(selector).html(juicer($(selector).html(), data));
+            return juicer($(selector).html(), data);
         }
     },
     template: {}
 };
-
-ex.jsonp({
-    url: 'http://activity.meizhanggui.cc/weixinAuth2/userInfo?_method=GET',//获取unionid等一系列参数的url
-    data: {
-        code: ROLE.code
-    },
-    success: function (obj) {
-        if (obj.success) {
-            test.alert(obj);
-            ROLE.unionid = obj.data.unionid;
-            ROLE.subscribe = obj.data.subscribe;
-            //document.cookie = 'unionid=' + obj.data.unionid + '&subscribe=' + obj.data.subscribe + '&';
-
-            ex.render('.infoBox', {
-                signCount: obj.data.signCount,
-                voteConut: obj.data.voteConut,
-                visitCount: obj.data.visitCount
-            });
-
-            routie({
-                "story/?:id": function (id) {
-                    page_story.id = id;
-                    page_story.init();
-                },
-                "story": function () {
-                    page_story.id = '';
-                    page_story.init();
-                },
-                "list": page_list.init,
-                "sign": page_sign.init
-            });
-        }
-        else {
-            layer.msg(obj.msg);
-        }
-    }
-});
-
 juicer.register('pageCreat', function (i, page, Maxpage) {
     if (page == i) {
         return '<li class="nowPage">' + i + '</li>';
-    } else if (i > 0 && i < Maxpage && i > page - 3 && i < page + 3) {
+    } else if (i > 0 && i < Maxpage && (i > (page - 3)) && (i < (page + 3))) {
         return '<li class="normalPage">' + i + '</li>';
     } else {
         return '';
@@ -91,6 +54,50 @@ juicer.register('text', function (text) {
     return text.replace(/ /g, '&nbsp;').replace(/</g, '&lt').replace(/>/g, '&gt').replace(/\n/g, '<br/>');
 });
 
+if (ROLE.code) {
+    ex.jsonp({
+        url: 'http://activity.meizhanggui.cc/weixinAuth2/userInfo?_method=GET',//获取unionid等一系列参数的url
+        data: {
+            code: ROLE.code
+        },
+        success: function (obj) {
+
+            if (obj.success) {
+                ROLE.unionid = obj.data.unionid;
+                ROLE.subscribed = obj.data.subscribed;
+                //document.cookie = 'unionid=' + obj.data.unionid + '&subscribed=' + obj.data.subscribed + '&';
+
+                ex.render('.infoBox', {
+                    signCount: obj.data.signCount,
+                    voteConut: obj.data.voteCount,
+                    visitCount: obj.data.visitCount
+                });
+
+                page_list.data.Maxpage = Math.ceil(obj.data.signCount / 6);
+                page_list.data.Maxpage==0?page_list.data.Maxpage=1:null;
+
+                routie({
+                    "story/?:id": function (id) {
+                        alert("geiId:" + id);
+                        page_story._id = id;
+                        page_story.init();
+                    },
+                    "story": function () {
+                        page_story._id = '';
+                        page_story.init();
+                    },
+                    "list": page_list.init,
+                    "sign": page_sign.init
+                });
+
+            }
+            else {
+                layer.msg(obj.msg);
+            }
+        }
+    });
+}
+
 window.addEventListener('load', function () {
     FastClick.attach(document.body);
 
@@ -100,6 +107,19 @@ window.addEventListener('load', function () {
         itemList: $('#itemListTemp').html(),
         pageBox: $('#pageBoxTemp').html()
     };
+
+    //routie({
+    //    "story/?:id": function (_id) {
+    //        page_story._id = _id;
+    //        page_story.init();
+    //    },
+    //    "story": function () {
+    //        page_story.id = '';
+    //        page_story.init();
+    //    },
+    //    "list": page_list.init,
+    //    "sign": page_sign.init
+    //});
 
     WX.init();
 
@@ -112,7 +132,7 @@ var WX = {
         var wxUrl = encodeURIComponent(location.href.split('#')[0]),
             config = function (appId, timestamp, nonceStr, signature) {
                 wx.config({
-                    debug: true,
+                    debug: false,
                     appId: appId,
                     timestamp: timestamp,
                     nonceStr: nonceStr,
@@ -122,7 +142,6 @@ var WX = {
                         'onMenuShareAppMessage',
                         'onMenuShareQQ',
                         'onMenuShareWeibo',
-                        'onMenuShareQZone',
                         'chooseImage',
                         'uploadImage'
                     ]
@@ -141,7 +160,6 @@ var WX = {
             beforeSend: function () {
             },
             success: function (obj) {
-                console.dir(obj);
                 var appId = obj.data.appId,
                     timestamp = obj.data.timestamp,
                     nonceStr = obj.data.nonceStr,
@@ -162,14 +180,11 @@ var WX = {
             wx.onMenuShareAppMessage(shareObj);
             wx.onMenuShareQQ(shareObj);
             wx.onMenuShareWeibo(shareObj);
-            wx.onMenuShareQZone(shareObj);
-        } else {
-            if (WX.timer)clearInterval(WX.timer);
-            WX.timer = setTimeout((function (shareObj) {
-                return function () {
-                    WX.set(shareObj);
-                }
-            })(shareObj), 100)
+        }else{
+            wx.ready(function(){
+                WX.ready = true;
+                WX.set(shareObj)
+            });
         }
     }
 };
@@ -182,21 +197,29 @@ var myWindow = {
             title: false,
             closeBtn: false,
             shadeClose: true,
-            area:'250px',
+            area: '250px',
             skin: 'tatoo',
             content: '<a href="' + link + '">要给他投票<br>关注微信公众平台哦</a>'
         });
+        setTimeout(function(){
+            location.href = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=207445005&idx=1&sn=b1806776c747dfd039f56799036bc056#rd';
+        },2000);
     },
-    uploadSuccess: function () {
+    uploadSuccess: function (id) {
         layer.open({
             type: 1,
             title: false,
             closeBtn: false,
             shadeClose: true,
-            area:'250px',
+            area: '250px',
             skin: 'tatoo',
-            content: '<a">恭喜报名成功<br><br>快让好友来投票吧</a>'
+            content: '<a>恭喜报名成功<br><br>快让好友来投票吧</a>'
         });
+        location.hash = '#story/' + id;
+        $('#share').show();
+        setTimeout(function(){
+            $('#share').hide();
+        },5000);
     },
     voteSuccess: function () {
         layer.open({
@@ -204,7 +227,7 @@ var myWindow = {
             title: false,
             closeBtn: false,
             shadeClose: true,
-            area:'250px',
+            area: '250px',
             skin: 'tatoo',
             content: '<a>投票成功!<br><br>不如点击参与活动<br>一块儿来玩呀</a>'
         });
@@ -218,7 +241,7 @@ var footer = {
         this.selected = target;
         $('footer>a').removeClass('selected');
         $('.icon.' + target).parent().addClass('selected');
-        window.scrollTo(0, 0);
+        window.scrollTo(0,0);
     }
 };
 
@@ -227,45 +250,8 @@ var page_list = {
 
         page: 3,
         Maxpage: 10,
+        list: []
 
-        list: [
-            {
-                index: 228,
-                img: "http://img.meizhanggui.cc/ba0fbe650e06ec9465e3958b87ca74ae_W_460X640",
-                name: '阿斯房',
-                vote: 39
-            },
-            {
-                index: 228,
-                img: "http://img.meizhanggui.cc/093d5b74cbdc8e759c9ad6565cd5ec9d_W_1500X1029",
-                name: '阿斯房',
-                vote: 39
-            },
-            {
-                index: 228,
-                img: "http://img.meizhanggui.cc/093d5b74cbdc8e759c9ad6565cd5ec9d_W_1500X1029",
-                name: '阿斯房',
-                vote: 39
-            },
-            {
-                index: 228,
-                img: "http://img.meizhanggui.cc/093d5b74cbdc8e759c9ad6565cd5ec9d_W_1500X1029",
-                name: '阿斯房',
-                vote: 39
-            },
-            {
-                index: 228,
-                img: "http://img.meizhanggui.cc/093d5b74cbdc8e759c9ad6565cd5ec9d_W_1500X1029",
-                name: '阿斯房',
-                vote: 39
-            },
-            {
-                index: 228,
-                img: "http://img.meizhanggui.cc/093d5b74cbdc8e759c9ad6565cd5ec9d_W_1500X1029",
-                name: '阿斯房',
-                vote: 39
-            }
-        ]
     },
     tab: 'time',
     e$changeTab: function (tab) {
@@ -287,15 +273,12 @@ var page_list = {
         this.toPage(i)
     },
     e$vote: function (index) {
-        if (ROLE.subscribe == 0) {
-            myWindow.notAttention();
-            return;
-        }
+        if (!ROLE.subscribed)return myWindow.notAttention();
         ex.jsonp({
             url: baseUrl + "vote/?_method=GET",
             data: {
-                id: page_list.list[index].id,
-                unionid: ROLE.unionid
+                productId: page_list.list[index]._id,
+                openId: ROLE.unionid
             },
             success: function (obj) {
 
@@ -322,13 +305,13 @@ var page_list = {
 
                 if (obj.success) {
                     page_list.list = obj.data;
-                    ex.render('#itemList', page_list.data);
+                    ex.render('#itemList', {list: page_list.list});
                     ex.render('#pageBox', page_list.data);
                     pbl.Set();
                     $('#itemList li img').each(function (index) {
                         $(this).click((function (index) {
                             return function () {
-                                location.hash = "#story/" + page_list.list[index].id;
+                                location.hash = "#story/" + page_list.list[index]._id;
                             }
                         })(index))
                     });
@@ -343,7 +326,9 @@ var page_list = {
                         $(this).click(function () {
                             page_list.e$page($(this).text());
                         })
-                    })
+                    });
+                    window.scrollTo(0,300);
+
                 } else {
                     layer.msg(obj.msg);
                 }
@@ -352,13 +337,10 @@ var page_list = {
     },
     init: function () {
 
-        footer.tab('list');
         $('.page').hide();
         $('#page_list').show();
         $('.infoBox').show();
         $('#loading').hide();
-
-        ex.render('#page_list', page_list.data);
 
         $('#page_list .tab div:eq(0)').click(function () {
             page_list.e$changeTab('time')
@@ -367,13 +349,17 @@ var page_list = {
             page_list.e$changeTab('rank')
         });
 
+        footer.tab('list');
+
         page_list.e$changeTab('time');
-        page_list.toPage(1);
+        setTimeout(function () {
+            page_list.toPage(1);
+        }, 0);
     }
 };
 
 var page_story = {
-    id: null,
+    _id: null,
     data: {
         index: 120,
         name: '呵呵哒',
@@ -384,14 +370,12 @@ var page_story = {
         desc: "这是一串长长的文字。里面有\n换行，还有不少 空  格"
     },
     e$vote: function () {
-        if (ROLE.subscribe == 0) {
-            myWindow.notAttention();
-            return;
-        }
+        if (!ROLE.subscribed)return myWindow.notAttention();
         ex.jsonp({
             url: baseUrl + "vote/?_method=GET",
             data: {
-                id: page_story.data.id
+                productId: page_story._id,
+                openId: ROLE.unionid
             },
             success: function (obj) {
 
@@ -402,33 +386,34 @@ var page_story = {
                 } else {
                     layer.msg(obj.msg);
                 }
+
             }
         }, this);
     },
     init: function () {
-
-        if (this.data.id == '')return location.hash = "#list";
+        if (page_story._id == '')return location.hash = "#list";
         ex.jsonp({
             url: baseUrl + "getProductDetails?_method=GET",
             data: {
-                id: this.data.id
+                productId: page_story._id
             },
             success: function (obj) {
                 if (obj.success) {
                     page_story.data = {
-                        index: obj.data.id,
+                        index: obj.data.productNumber,
                         name: obj.data.authorName,
                         vote: obj.data.voteNum,
-                        rank: obj.data.authorName,
-                        x: 50,
+                        rank: obj.data.index,
+                        x: obj.data.previousVoteNum==-1?'榜首':('距上一名还差'+(obj.data.previousVoteNum - obj.data.voteNum)+'票'),
                         img: obj.data.images[0],
                         desc: obj.data.content
                     };
                     ex.render('#page_story', page_story.data);
+                    $('footer a:eq(0)').attr('href','#story'+page_story._id);
 
                     WX.set({
                         title: obj.data.authorName + "的参选作品",
-                        link: location.origin + location.pathname + '#story/' + page_story.id,
+                        link: location.origin + location.pathname + '#story/' + page_story._id,
                         imgUrl: obj.data.images[0],
                         desc: '快来给我投票吧！'
                     });
@@ -439,7 +424,7 @@ var page_story = {
                     $('.infoBox').hide();
                     $('#loading').hide();
 
-                    $('#page_story .btn:eq(0)').click(this.e$vote);
+                    $('#page_story .btn.hot').click(page_story.e$vote);
                     $('#page_story .btn:eq(1)').click(function () {
                         location.hash = '#sign';
                     });
@@ -448,6 +433,9 @@ var page_story = {
                     });
                     $('#page_story .btn:eq(3)').click(function () {
                         location.href = 'http://www.wenshendaka.com';
+                    });
+                    $('#close').click(function () {
+                        location.hash = '#list';
                     });
                 }
                 else {
@@ -464,6 +452,8 @@ var page_sign = {
     phonenum: '',
     img: null,
     desc: '',
+    render: false,
+    sign: false,
     e$uploadImg: function () {
         wx.chooseImage({
             count: 1,
@@ -487,37 +477,38 @@ var page_sign = {
         })
     },
     e$uploadProduct: function () {
-        this.nickname = $('#name').val();
-        this.phonenum = $('#phonenum').val();
-        this.desc = $('#desc').val();
-        if (this.phonenum.length < 11)return layer.msg("输入正确的手机号");
-        if (this.nickname.length < 1)return layer.msg("输入正确的昵称");
-        if (this.phonenum.desc < 1)return layer.msg("输入文字内容");
-        if (this.img == null)return layer.msg("请上传图片");
+        page_sign.nickname = $('#name').val();
+        page_sign.phonenum = $('#phonenum').val();
+        page_sign.desc = $('#desc').val();
+        if (page_sign.phonenum.length < 11)return layer.msg("输入正确的手机号");
+        if (page_sign.nickname.length < 1)return layer.msg("输入正确的昵称");
+        if (page_sign.phonenum.desc < 1)return layer.msg("输入文字内容");
+        if (page_sign.img == null)return layer.msg("请上传图片");
         ex.jsonp({
             url: baseUrl + "upload/?_method=GET",
             data: {
-                authorName: this.nickname,
-                images: [this.img],
-                content: this.desc,
-                unionid: ROLE.unionid,
-                phonenum: this.phonenum
+                authorName: page_sign.nickname,
+                images: "[\"" + page_sign.img + "\"]",
+                content: page_sign.desc,
+                openId: ROLE.unionid,
+                phoneNum: page_sign.phonenum
             },
             success: function (obj) {
-                if (test)test.alert(obj);
                 if (obj.success) {
-                    WX.set({
-                        title: page_sign.nickname + "的参选作品",
-                        link: location.origin + location.pathname + '#story/' + obj.data.id,
-                        imgUrl: obj.data.image[0],
-                        desc: '快来给我投票吧！'
-                    });
-                    myWindow.uploadSuccess();
+                    page_sign.sign = true;
+                    myWindow.uploadSuccess(obj.data._id);
+                } else {
+                    layer.msg(obj.msg);
                 }
             }
         })
     },
     init: function () {
+
+        if (page_sign.sign) {
+            layer.msg('您已经报过名了');
+            return location.hash = '#list';
+        }
 
         $('.page').hide();
         $('#page_sign').show();
@@ -525,11 +516,13 @@ var page_sign = {
         $('.infoBox').show();
         $('#loading').hide();
 
-        setTimeout(function () {
-            $('#upload').click(page_sign.e$uploadImg);
-            $('#page_sign .btn').click(page_sign.e$uploadProduct);
-        }, 0);
-
+        if (!page_sign.render) {
+            page_sign.render = true;
+            setTimeout(function () {
+                $('#upload').click(page_sign.e$uploadImg);
+                $('#page_sign .btn').click(page_sign.e$uploadProduct);
+            }, 0);
+        }
     }
 };
 

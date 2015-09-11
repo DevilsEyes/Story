@@ -121,6 +121,7 @@ header img{
     height: 24px;
     padding: 4px;
     width: 60%;
+    border-radius: 0;
 }
 
 #searchButtom{
@@ -274,6 +275,7 @@ header img{
     background-color: #2a2b2d;
     border-radius: 4px;
     color: white;
+    font-size: 24rem;
 }
 
 
@@ -303,6 +305,14 @@ header img{
     font-size: 32rem;
     color: #f0f0f0;
     text-align: left;
+    line-height: 20px;
+}
+
+.description h4{
+    padding:30px 15px 5px 15px;
+    font-size: 28rem;
+    color: rgb(197,187,160);
+    text-align: center;
     line-height: 20px;
 }
 
