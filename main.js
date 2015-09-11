@@ -526,6 +526,12 @@ var page_sign = {
                 $('#page_sign .btn').click(page_sign.e$uploadProduct);
             }, 0);
         }
+        WX.set({
+            title: "你敢晒，我敢奖，晒出你的纹身故事",
+            link: location.origin + location.pathname + '#sign',
+            imgUrl: 'http://m.wenshendaka.com/activities/story/imgs/banner.jpg',
+            desc: '快来报名吧！'
+        });
     }
 };
 
