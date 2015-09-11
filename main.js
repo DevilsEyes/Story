@@ -21,18 +21,14 @@ var ex = {
         })
     },
     render: function (selector, data) {
+        if(selector=='#page_story'){
+            test.alert(data);
+            alert(ex.template[selector.substr(1)]);
+        }
         if (ex.template[selector.substr(1)]) {
-            if(selector=='#page_story'){
-                alert('temlateGet');
-                test.alert(data);
-            }
             $(selector).html(juicer(ex.template[selector.substr(1)], data));
             return juicer(ex.template[selector.substr(1)], data);
         } else {
-            if(selector=='#page_story'){
-                alert('temlateNotfound');
-                test.alert(data);
-            }
             $(selector).html(juicer($(selector).html(), data));
             return juicer($(selector).html(), data);
         }
