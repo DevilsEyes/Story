@@ -415,7 +415,7 @@ var page_story = {
                     $('footer a:eq(0)').attr('href','#story'+page_story._id);
 
                     WX.set({
-                        title: obj.data.authorName + "的参选作品",
+                        title: obj.data.authorName + "的纹身故事",
                         link: location.origin + location.pathname + '#story/' + page_story._id,
                         imgUrl: obj.data.images[0],
                         desc: '快来给我投票吧！'
