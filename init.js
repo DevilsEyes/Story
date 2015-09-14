@@ -44,7 +44,7 @@ var Config = {
     isMobile:navigator.userAgent.match(/Mobile/i) != null
 };
 
-if(WX.isWX){
+if(Config.isWX){
     if(!g$url.getParam().state){
         g$url.getWxAuth();
     }else{
