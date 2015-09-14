@@ -13,6 +13,11 @@ body{
     background-color: rgb(42,43,45);
 }
 
+#main{
+    max-width: 640px;
+    margin:auto;
+}
+
 header img{
     width: 100%;
     margin-bottom:20px;
@@ -151,7 +156,7 @@ header img{
 .tab>div.selected{
     color: #c5bba0;
     background: url("imgs/tabSelect.png") no-repeat bottom;
-    background-size: 60%;
+    background-size: 100px;
 }
 
 #itemList{
@@ -325,6 +330,7 @@ header img{
 
 footer{
     width: 100%;
+    max-width: 640px;
     text-align: center;
     position: fixed;
     z-index: 10;

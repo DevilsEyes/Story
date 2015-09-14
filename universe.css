@@ -45,10 +45,6 @@ body{
 .f28{font-size: 28rem;}
 .f24{font-size: 24rem;}
 
-.i-b{
-    display: inline-block;
-}
+.i-b{display: inline-block;}
 
-.p-a{
-    position: absolute;
-}
+.p-a{position: absolute;}

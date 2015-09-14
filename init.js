@@ -37,31 +37,17 @@ var g$url = {
             }
         }
     }
-    //checkCookie:function(){
-    //    var unionid = document.cookie.match(/unionid=([^\b&]*)/);
-    //    var subscribed = document.cookie.match(/subscribed=([^\b&]*)/);
-    //    if(unionid&&unionid[1]&&subscribed&&subscribed[1]){
-    //        ROLE={
-    //            isAuth:true,
-    //            code:null,
-    //            unionid:unionid,
-    //            subscribed:subscribed
-    //        };
-    //        return false;
-    //    }else{
-    //        return true;
-    //    }
-    //}
 };
 
-var ROLE = {
-    isAuth:false,
-    code:'',
-    unionid:'',
-    subscribed:0
+var Config = {
+    isWX:navigator.userAgent.match(/MicroMessenger/i) != null,
+    isMobile:navigator.userAgent.match(/Mobile/i) != null
 };
-if(!g$url.getParam().state){
-    g$url.getWxAuth();
-}else{
-    g$url.checkUrl();
+
+if(WX.isWX){
+    if(!g$url.getParam().state){
+        g$url.getWxAuth();
+    }else{
+        g$url.checkUrl();
+    }
 }

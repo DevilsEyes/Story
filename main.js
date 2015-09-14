@@ -34,7 +34,7 @@ var ex = {
 juicer.register('pageCreat', function (i, page, Maxpage) {
     if (page == i) {
         return '<li class="nowPage">' + i + '</li>';
-    } else if (i > 0 && i < Maxpage && (i > (page - 3)) && (i < (page + 3))) {
+    } else if (i > 0 && i <= Maxpage && (i > (page - 3)) && (i < (page + 3))) {
         return '<li class="normalPage">' + i + '</li>';
     } else {
         return '';
@@ -47,19 +47,30 @@ juicer.register('imgCreat', function (src, cla, type) {
         var img = pbl.cal(src);
         return "<img src='" + img.url + "' width=" + img.w + " height=" + img.h + "/>"
     } else {
-        return '<img src="' + src + '"/>';
+        if(Config.isWX){
+            return '<img src="' + src + '?imageView2/0/w/640"/>';
+        }else{
+            return '<img src="' + src + '"/>';
+        }
     }
 });
 juicer.register('text', function (text) {
     return text.replace(/ /g, '&nbsp;').replace(/</g, '&lt').replace(/>/g, '&gt').replace(/\n/g, '<br/>');
 });
 
-if (ROLE.code) {
+(function(){
+    var data;
+    if(Config.isWX){
+        data = {
+            code: ROLE.code
+        }
+    }else{
+        data = null;
+    }
+
     ex.jsonp({
         url: 'http://activity.meizhanggui.cc/weixinAuth2/userInfo?_method=GET',//获取unionid等一系列参数的url
-        data: {
-            code: ROLE.code
-        },
+        data: data,
         success: function (obj) {
 
             if (obj.success) {
@@ -106,29 +117,15 @@ if (ROLE.code) {
             }
         }
     });
-}
+
+})();
 
 window.addEventListener('load', function () {
     FastClick.attach(document.body);
-
-    //routie({
-    //    "story/?:id": function (_id) {
-    //        page_story._id = _id;
-    //        page_story.init();
-    //    },
-    //    "story": function () {
-    //        page_story.id = '';
-    //        page_story.init();
-    //    },
-    //    "list": page_list.init,
-    //    "sign": page_sign.init
-    //});
-
-    WX.init();
-
+    if(Config.isWX)WX.init();
 }, false);
 
-var WX = {
+WX = {
     ready: false,
     timer: null,
     init: function () {
@@ -193,8 +190,7 @@ var WX = {
 };
 
 var myWindow = {
-    notAttention: function () {
-        var link = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=207445005&idx=1&sn=b1806776c747dfd039f56799036bc056#rd';
+    open:function(str,link){
         layer.open({
             type: 1,
             title: false,
@@ -202,22 +198,18 @@ var myWindow = {
             shadeClose: true,
             area: '250px',
             skin: 'tatoo',
-            content: '<a href="' + link + '">要给他投票<br>关注微信公众平台哦</a>'
+            content: '<a href="' + (link?link:null) + '">'+str+'</a>'
         });
+    },
+    notAttention: function () {
+        var link = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=207445005&idx=1&sn=b1806776c747dfd039f56799036bc056#rd';
+        this.open('要给他投票<br>关注微信公众平台哦',link);
         setTimeout(function(){
             location.href = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=207445005&idx=1&sn=b1806776c747dfd039f56799036bc056#rd';
         },2000);
     },
     uploadSuccess: function (id) {
-        layer.open({
-            type: 1,
-            title: false,
-            closeBtn: false,
-            shadeClose: true,
-            area: '250px',
-            skin: 'tatoo',
-            content: '<a>恭喜报名成功<br><br>快让好友来投票吧</a>'
-        });
+        this.open('恭喜报名成功<br><br>快让好友来投票吧');
         location.hash = '#story/' + id;
         $('#share').show();
         setTimeout(function(){
@@ -225,15 +217,10 @@ var myWindow = {
         },5000);
     },
     voteSuccess: function () {
-        layer.open({
-            type: 1,
-            title: false,
-            closeBtn: false,
-            shadeClose: true,
-            area: '250px',
-            skin: 'tatoo',
-            content: '<a>投票成功!<br><br>不如点击参与活动<br>一块儿来玩呀</a>'
-        });
+        this.open('投票成功!<br><br>不如点击参与活动<br>一块儿来玩呀');
+    },
+    notInWX:function(){
+        this.open('在微信客户端内打开<br>才能参与活动哦');
     }
 };
 
@@ -276,6 +263,7 @@ var page_list = {
         this.toPage(i)
     },
     e$vote: function (index) {
+        if(!Config.isWX) return myWindow.notInWX();
         if (!ROLE.subscribed)return myWindow.notAttention();
         ex.jsonp({
             url: baseUrl + "vote/?_method=GET",
@@ -373,6 +361,7 @@ var page_story = {
         desc: "这是一串长长的文字。里面有\n换行，还有不少 空  格"
     },
     e$vote: function () {
+        if(!Config.isWX) return myWindow.notInWX();
         if (!ROLE.subscribed)return myWindow.notAttention();
         ex.jsonp({
             url: baseUrl + "vote/?_method=GET",
@@ -508,6 +497,11 @@ var page_sign = {
     },
     init: function () {
 
+        if(!Config.isWX) {
+            myWindow.notInWX();
+            return location.hash = '#story';
+        }
+
         if (page_sign.sign) {
             layer.msg('您已经报过名了');
             return location.hash = '#list';
@@ -538,7 +532,7 @@ var page_sign = {
 //瀑布流
 window.pbl = {
     cal: function (str) {
-        var w = $(window).width();
+        var w = Config.isMobile?$(window).width():640;
         var width = (w - 45) / 2;
 
         if (!str) {
