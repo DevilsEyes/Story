@@ -95,6 +95,10 @@ juicer.register('text', function (text) {
                     visitCount: obj.data.visitCount
                 });
 
+                $('header').click(function(){
+                    location.href = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=206561314&idx=4&sn=9cfa002959ab0d5be3ea4de50e3109d3#wechat_redirect';
+                });
+
                 page_list.data.Maxpage = Math.ceil(obj.data.signCount / 6);
                 page_list.data.Maxpage==0?page_list.data.Maxpage=1:null;
 
