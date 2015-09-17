@@ -98,6 +98,9 @@ juicer.register('text', function (text) {
                 $('header').click(function(){
                     location.href = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=206561314&idx=4&sn=9cfa002959ab0d5be3ea4de50e3109d3#wechat_redirect';
                 });
+                $('h4').click(function(){
+                    location.href = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=206561314&idx=4&sn=9cfa002959ab0d5be3ea4de50e3109d3#wechat_redirect';
+                });
 
                 page_list.data.Maxpage = Math.ceil(obj.data.signCount / 6);
                 page_list.data.Maxpage==0?page_list.data.Maxpage=1:null;
@@ -345,6 +348,13 @@ var page_list = {
         });
 
         footer.tab('list');
+
+        $('#page_list .btn:eq(0)').click(function () {
+            location.hash = '#sign';
+        });
+        $('#page_list .btn:eq(1)').click(function () {
+            location.href = 'http://www.wenshendaka.com';
+        });
 
         page_list.e$changeTab('time');
         setTimeout(function () {
