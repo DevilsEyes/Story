@@ -96,10 +96,10 @@ juicer.register('text', function (text) {
                 });
 
                 $('header').click(function(){
-                    location.href = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=206561314&idx=4&sn=9cfa002959ab0d5be3ea4de50e3109d3#wechat_redirect';
+                    location.href = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=207324146&idx=1&sn=62a4f22fa7278c01bc1603baab8783bc#rd';
                 });
                 $('h4').click(function(){
-                    location.href = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=206561314&idx=4&sn=9cfa002959ab0d5be3ea4de50e3109d3#wechat_redirect';
+                    location.href = 'http://mp.weixin.qq.com/s?__biz=MzIwMTI1NDI3NQ==&mid=207324146&idx=1&sn=62a4f22fa7278c01bc1603baab8783bc#rd';
                 });
 
                 page_list.data.Maxpage = Math.ceil(obj.data.signCount / 6);
